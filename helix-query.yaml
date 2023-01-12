@@ -1,7 +1,6 @@
 version: 1
-auto-generated: true
 indices:
-  default:
+  default1:
     include:
       - /**
     target: /query-index.json
@@ -11,6 +10,9 @@ indices:
         value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
       title:
         select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      expectedpath:
+        select: head > meta[name="path"]
         value: attribute(el, "content")
       image:
         select: head > meta[property="og:image"]
