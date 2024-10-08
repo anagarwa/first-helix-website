@@ -14,21 +14,27 @@ jobs:
         with:
           fetch-depth: 0  # Fetch the entire history so we can create a new branch
 
-      # Step 2: Create a new branch
+      # Step 2: Set up Git identity (use GitHub Actions bot identity)
+      - name: Set up Git user
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Step 3: Create a new branch
       - name: Create new branch
         run: |
           BRANCH_NAME="test-github-token-$(date +'%Y%m%d%H%M%S')"
           git checkout -b $BRANCH_NAME
           echo "Created new branch $BRANCH_NAME"
 
-      # Step 3: Make a dummy commit
+      # Step 4: Make a dummy commit
       - name: Make a dummy commit
         run: |
           echo "This is a test commit to verify GITHUB_TOKEN access" > test-file.txt
           git add test-file.txt
           git commit -m "Dummy commit to test GITHUB_TOKEN access"
 
-      # Step 4: Push the commit to the new branch using GITHUB_TOKEN
+      # Step 5: Push the commit to the new branch using GITHUB_TOKEN
       - name: Push commit to new branch
         run: |
           git push origin $BRANCH_NAME
