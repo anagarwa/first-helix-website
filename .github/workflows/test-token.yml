@@ -1,0 +1,36 @@
+name: Test GITHUB_TOKEN Write Access
+
+on:
+  workflow_dispatch:  # Allows the workflow to be triggered manually
+
+jobs:
+  create-branch-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Fetch the entire history so we can create a new branch
+
+      # Step 2: Create a new branch
+      - name: Create new branch
+        run: |
+          BRANCH_NAME="test-github-token-$(date +'%Y%m%d%H%M%S')"
+          git checkout -b $BRANCH_NAME
+          echo "Created new branch $BRANCH_NAME"
+
+      # Step 3: Make a dummy commit
+      - name: Make a dummy commit
+        run: |
+          echo "This is a test commit to verify GITHUB_TOKEN access" > test-file.txt
+          git add test-file.txt
+          git commit -m "Dummy commit to test GITHUB_TOKEN access"
+
+      # Step 4: Push the commit to the new branch using GITHUB_TOKEN
+      - name: Push commit to new branch
+        run: |
+          git push origin $BRANCH_NAME
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
