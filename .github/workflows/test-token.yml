@@ -37,6 +37,6 @@ jobs:
       # Step 5: Push the commit to the new branch using GITHUB_TOKEN
       - name: Push commit to new branch
         run: |
-          git push -u origin $BRANCH_NAME
+          git push --set-upstream origin $BRANCH_NAME
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
