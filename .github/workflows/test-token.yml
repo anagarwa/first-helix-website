@@ -1,42 +1,38 @@
-name: Test GITHUB_TOKEN Write Access
+name: Test GITHUB_TOKEN Access Manually
 
 on:
-  workflow_dispatch:  # Allows the workflow to be triggered manually
+  workflow_dispatch:  # Manual trigger
 
 jobs:
-  create-branch-and-commit:
+  test-github-token:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Fetch the entire history so we can create a new branch
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
-      # Step 2: Set up Git identity (use GitHub Actions bot identity)
-      - name: Set up Git user
+      - name: Set up Git user identity
         run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # Step 3: Create a new branch
       - name: Create new branch
         run: |
           BRANCH_NAME="test-github-token-$(date +'%Y%m%d%H%M%S')"
           git checkout -b $BRANCH_NAME
-          echo "Created new branch $BRANCH_NAME"
 
-      # Step 4: Make a dummy commit
       - name: Make a dummy commit
         run: |
           echo "This is a test commit to verify GITHUB_TOKEN access" > test-file.txt
           git add test-file.txt
-          git commit -m "Dummy commit to test GITHUB_TOKEN access"
+          git commit -m "Test commit using GITHUB_TOKEN"
 
-      # Step 5: Push the commit to the new branch using GITHUB_TOKEN
-      - name: Push commit to new branch
+      - name: Push commit to new branch and set upstream
         run: |
+          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
           git push --set-upstream origin $BRANCH_NAME
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
