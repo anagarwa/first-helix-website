@@ -20,14 +20,8 @@ jobs:
           fetch-depth: 0  # Fetch full history for context
 
       # Step 2: Create Pull Request to main branch if branch name starts with automated-arena-push
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref_name }}  # The current branch, e.g., automated-arena-push-branch
-          base: main  # The base branch to merge into
-          title: "Automated Sync: Arena repo to Commons repo"
-          body: "This pull request syncs changes from the arena repository into the commons repository. Branch: ${{ github.ref_name }}."
-          labels: |
-            sync
-          assignees: anagarwa  # Optionally assign to a specific user (adjust based on preference)
+      - name: create pull request
+        run: gh pr create -B main -H ${{ github.ref_name }} --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
