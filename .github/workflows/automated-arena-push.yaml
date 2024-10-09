@@ -1,0 +1,33 @@
+name: Create PR for automated arena push branches
+
+on:
+  push:
+    branches:
+      - "automated-arena-push-*"
+
+permissions:
+  contents: write  # Allows pushing and pull request actions
+
+jobs:
+  create_pr_for_automated_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the commons repository
+      - name: Checkout the commons repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Fetch full history for context
+
+      # Step 2: Create Pull Request to main branch if branch name starts with automated-arena-push
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}  # The current branch, e.g., automated-arena-push-branch
+          base: main  # The base branch to merge into
+          title: "Automated Sync: Arena repo to Commons repo"
+          body: "This pull request syncs changes from the arena repository into the commons repository. Branch: ${{ github.ref_name }}."
+          labels: |
+            sync
+          assignees: anagarwa  # Optionally assign to a specific user (adjust based on preference)
