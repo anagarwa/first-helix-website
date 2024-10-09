@@ -6,6 +6,7 @@ on:
       - "automated-arena-push-**"
 
 permissions:
+  pull-requests: write
   contents: write  # Allows push and pull request actions
 
 jobs:
