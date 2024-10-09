@@ -3,7 +3,7 @@ name: Create PR for automated arena push branches
 on:
   push:
     branches:
-      - "automated-arena-push-*"
+      - "automated-arena-push-**"
 
 permissions:
   contents: write  # Allows push and pull request actions
